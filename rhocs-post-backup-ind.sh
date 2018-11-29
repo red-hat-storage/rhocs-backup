@@ -19,6 +19,7 @@ OCPROJECT="infra-storage" ## OpenShift project where gluster cluster lives
 ## from this root user to gluster server root
 ## Any of the Gluster nodes from RHOCS cluster you want to protect
 GLUSTERSERVER=172.16.25.67
+BASTIONHOST=172.16.0.119
 
 ## Temporary file to put the list of Gluster Snapshots to dismount and delete
 SNAPLIST=/root/snaplist-`date +%Y%m%d-%H:%M`.txt 
@@ -28,6 +29,10 @@ USERHEKETI=admin ## User with admin permissions to dialog with Heketi
 SECRETHEKETI="xzAqO62qTPlacNjk3oIX53n2+Z0Z6R1Gfr0wC+z+sGk=" ## Heketi user key
 HEKETI_CLI_SERVER=http://heketi-registry-infra-storage.apps.refarch311.makestoragegreatagain.com ## Route where Heketi pod is listening
 
+## Provides Logging of this script in the dir specified below:
+#LOG="/root/$0-`date +%Y%m%d-%H:%M`.log"
+#exec &>> $LOG
+
 ## Source and destination of backups without date
 PARENTMOUNT=/mnt/source  ## Parent directory for all volumes mounting without date
 
@@ -36,12 +41,12 @@ PARENTMOUNT=/mnt/source  ## Parent directory for all volumes mounting without da
 /usr/bin/df | /usr/bin/grep $GLUSTERSERVER | /usr/bin/grep snaps | /usr/bin/tr -s " " | /usr/bin/cut -d" " -f6 > $SNAPLIST
 ## If converged mode, get name of gluster pod
 if [ "$RHOCSMODE" = "converged" ]
-then 
+then
   ## Get inside OCP cluster to get access of Gluster pod
-  /usr/bin/oc login $OCADDRESS -u $OCUSER -p $OCPASS 
-  POD=`/usr/bin/oc get pods --all-namespaces -o wide | /usr/bin/grep glusterfs | /usr/bin/grep $GLUSTERSERVER | /usr/bin/tr -s " " | /usr/bin/cut -f2 -d" "`
+  /usr/bin/ssh $BASTIONHOST "/usr/bin/oc login $OCADDRESS -u $OCUSER -p $OCPASS"
+  POD=`/usr/bin/ssh $BASTIONHOST "/usr/bin/oc get pods --all-namespaces -o wide" | /usr/bin/grep glusterfs | /usr/bin/grep $GLUSTERSERVER | /usr/bin/tr -s " " | /usr/bin/cut -f2 -d" "`
   echo $POD
-  /usr/bin/oc project $OCPROJECT
+  /usr/bin/ssh $BASTIONHOST "/usr/bin/oc project $OCPROJECT"
 fi
 
 ## For each volume in $SNAPLIST dismount and delete snap 
@@ -53,12 +58,12 @@ do
   ## Depending on deployment mode: set of actions to interact with
   ## Gluster commands is different:
   if [ "$RHOCSMODE" = "converged" ]
-  then 
-    ## Delete Snapshot  
-    /usr/bin/oc rsh $POD /bin/bash -c  "/usr/sbin/gluster snapshot delete $SNAPNAME"<<EOF
+  then
+    ## Delete Snapshot
+    /usr/bin/ssh $BASTIONHOST "/usr/bin/oc rsh $POD /usr/sbin/gluster snapshot delete $SNAPNAME"<<EOF
 y
 EOF
-  fi
+  fi 
   if [ "$RHOCSMODE" = "independent" ]
   then
     ## Delete Snapshot
