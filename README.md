@@ -41,19 +41,19 @@ export LOGDIR="/root"
 ## Manual Execution of pre-backup and post-backup Scripts
 The scritps can be manually executed in the following manner for RHOCS converged mode:
 ```
-./rhocs-pre-backup.sh /path to file/converged_vars.ini
+sudo ./rhocs-pre-backup.sh /path to file/converged_vars.ini
 ```
 followed by
 ```
-./rhocs-post-backup.sh /path to file/converged_vars.ini
+sudo ./rhocs-post-backup.sh /path to file/converged_vars.ini
 ```
 The scritps can be manually executed in the following manner for RHOCS independent mode:
 ```
-./rhocs-pre-backup.sh /path to file/independent_vars.ini
+sudo ./rhocs-pre-backup.sh /path to file/independent_vars.ini
 ```
 followed by
 ```
-./rhocs-post-backup.sh /path to file/independent_vars.ini
+sudo ./rhocs-post-backup.sh /path to file/independent_vars.ini
 ```
 For each execution of the pre-backup or post-backup script a log file will be generated and placed in the directory specified in the ini file (default is /root). 
 
