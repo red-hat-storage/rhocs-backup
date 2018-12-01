@@ -39,7 +39,7 @@ export HEKETI_CLI_SERVER=http://heketi-storage-app-storage.apps.refarch311.ocpgl
 export LOGDIR="/root"
 ```
 ## Manual Execution of pre-backup and post-backup Scripts
-The scritps can be manually executed in the following manner for RHOCS converged mode:
+The scripts can be manually executed in the following manner for RHOCS converged mode:
 ```
 sudo ./rhocs-pre-backup.sh /path to file/converged_vars.ini
 ```
@@ -47,7 +47,7 @@ followed by
 ```
 sudo ./rhocs-post-backup.sh /path to file/converged_vars.ini
 ```
-The scritps can be manually executed in the following manner for RHOCS independent mode:
+The scripts can be manually executed in the following manner for RHOCS independent mode:
 ```
 sudo ./rhocs-pre-backup.sh /path to file/independent_vars.ini
 ```
