@@ -5,12 +5,12 @@
 ##
 
 ## Environment variables .ini file should be provided as argument
-if [ -f $1 ]
+if [ $1 -a -f $1 ]
 then
   source $1
 else
-  echo "You have to provide a ini file with environment variables as a parameter"
-  echo "Example: `basename $0 myvars.ini`"
+  echo "Error: You have to provide an ini file with environment variables as a parameter"
+  echo "Example: `basename $0` myvars.ini"
   exit 1
 fi
 
