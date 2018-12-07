@@ -56,6 +56,17 @@ followed by
 sudo ./rhocs-post-backup.sh /path to file/independent_vars.ini
 ```
 For each execution of the pre-backup or post-backup script a log file will be generated and placed in the directory specified in the ini file (default is /root). 
-
+## Script to be used to backup RH OCS in a standalone way (no backup app integration) 
+This repository also contains an individual script, called rhocs-oneshot-backup.sh, that is meant to be used to back up externally gluster-file volumes from a RHOCS cluster, without integrating this solution with a corporate backup application, as rhocs-pre-backup.sh and rhocs-post-backup.sh intend to do.
+This script backs up the contents of all existing Persistent Volumes (PVs) based on glusterfs-file from a specific RHOCS cluster to a $DESTINATION folder. RHOCS cluster can be independent mode (formerly CRS) or converged mode (formerly CNS). And all environment variables required are taken from same files independent_vars.ini and converged_vars.ini than rhocs-pre-backup.sh and rhocs-post-backup.sh scripts. A DESTINATION variable with a reachable folder from execution host with enough capacity to hold the backup of all gluster volumes is required in these ini files. 
+The actions taken by the script are the sequential execution of tasks done in rhocs-pre-backup.sh, plus a tar czf to $DESTINATION folder, and tasks done in rhocs-post-backup.sh. The tar command is replacing the backup process that is normally done by corporate backup applications (without cataloguing backed up contents).
+The script can be manually executed in the same manner than previous scripts, with root permissions to mount and unmount gluster snapshots:
+```
+sudo ./rhocs-oneshot-backup.sh </path to file/converged_vars.ini>
+```
+in the case of Converged RHOCS or the following in the case of Independent RHOCS:
+```
+sudo ./rhocs-oneshot-backup.sh </path to file/independent_vars.ini>
+```
 
 
