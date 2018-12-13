@@ -43,7 +43,7 @@ fi
 for VOLNAME in `/usr/bin/cat $SNAPLIST`
 do
   ## Get specific name for snapshot from mounted list 
-  SNAPNAME=`/usr/bin/echo $VOLNAME | /usr/bin/cut -d"/" -f5`
+  SNAPNAME=`/usr/bin/echo $VOLNAME | rev | /usr/bin/cut -d"/" -f1 | rev`
   /usr/bin/umount $VOLNAME 
   ## Depending on deployment mode: set of actions to interact with
   ## Gluster commands is different:
