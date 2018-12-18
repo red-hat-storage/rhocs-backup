@@ -1,5 +1,7 @@
 # rhocs-backup
 
+## Reference article:  https://redhatstorage.redhat.com/2018/12/12/how-to-back-up-and-recover-red-hat-openshift-container-storage
+
 ## Scripts to be used with Backup and Restore products
 
 This repository contains unsupported code that can be used in conjunction with Backup and Restore products. The two scripts, rhocs-pre-backup.sh and rhocs-post-backup.sh, have been tested with Commvault Complete Backup and Restore. The rhocs-pre-backup.sh script will find gluster file volumes, create a gluster snapshot for each volume, and then mount the volume on a bastion host that has the backup agent installed. After the backup of the mounted snapshot volume by backup server, the rhocs-post-backup.sh script will unmount the volumes and delete the gluster snapshots.
