@@ -1,6 +1,6 @@
 # rhocs-backup
 
-## Reference article:  https://redhatstorage.redhat.com/2018/12/12/how-to-back-up-and-recover-red-hat-openshift-container-storage
+### https://redhatstorage.redhat.com/2018/12/12/how-to-back-up-and-recover-red-hat-openshift-container-storage
 
 ## Scripts to be used with Backup and Restore products
 
