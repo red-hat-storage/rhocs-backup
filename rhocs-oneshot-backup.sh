@@ -164,6 +164,20 @@ EOF
   echo "Dismounting and deleting $SNAPBLOCKNAME ..."
 done
 
+
+## Provide Extra information in a file to correlate PVC of gluster-block
+## and IQN where directory string of gluster-block PV is stored. 
+## Example of output provided: 
+## Claim: openshift-logging/logging-es-0
+##  IQN: iqn.2016-12.org.gluster-block:1d141850-ff5f-407f-994b-01de011b44dc
+## The latest string is the gluster-block directory mounted with contents
+## related to the Claim, in this case elastic search files for logging-0 will
+## be inside directory 1d1418...
+/usr/bin/ssh $BASTIONHOST "/usr/bin/oc login $OCADDRESS -u $OCUSER -p $OCPASS"
+echo "Providing info about OCP PVCs with gluster-block IQN info to know contents of directories backed up..."
+/usr/bin/ssh $BASTIONHOST "/usr/bin/oc describe pv" | /usr/bin/grep 'Claim\|IQN' | /usr/bin/tr -s " " > $TARGET/info-gluster-block-pvcs-`date +%Y%m%d-%H%M`.txt
+
+
 ## Backing up Heketi DB
 echo "Backing up Heketi DB..."
 /usr/bin/heketi-cli db dump --server $HEKETI_CLI_SERVER --user $USERHEKETI --secret $SECRETHEKETI > $TARGET/heketidb-`date +%Y%m%d-%H%M`.json
