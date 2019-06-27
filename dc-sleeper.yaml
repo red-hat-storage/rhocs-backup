@@ -1,0 +1,44 @@
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    template.alpha.openshift.io/wait-for-ready: "true"
+  name: sleeper
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    name: sleeper
+  strategy:
+    activeDeadlineSeconds: 21600
+    recreateParams:
+      timeoutSeconds: 600
+    resources: {}
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        name: sleeper
+    spec:
+      containers:
+        - image: centos:7
+          imagePullPolicy: IfNotPresent
+          name: sleeper
+          command: ["/bin/bash", "-c"]
+          args: ["sleep infinity"]
+          volumeMounts:
+            - mountPath: /mnt
+              name: data
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 5
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mysql
+  test: false
+  triggers:
+    - type: ConfigChange
